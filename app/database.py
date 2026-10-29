@@ -27,8 +27,23 @@ def database() -> Iterator[sqlite3.Connection]:
         raise
     finally:
         connection.close()
+# CREATE TABLE IF NOT EXISTS users (
+#                 id INTEGER PRIMARY KEY,
+#                 username TEXT NOT NULL COLLATE NOCASE UNIQUE,
+#                 password_hash TEXT NOT NULL,
+#                 role TEXT NOT NULL CHECK (role IN ('buyer', 'seller')),
+#                 balance INTEGER NOT NULL DEFAULT 0 CHECK (balance >= 0),
+#                 created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+#             );
 
 
+# CREATE TABLE IF NOT EXISTS orders (
+#                 id INTEGER PRIMARY KEY,
+#                 buyer_id INTEGER NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
+#                 total_cost INTEGER NOT NULL CHECK (total_cost > 0),
+#                 status TEXT NOT NULL DEFAULT 'completed',
+#                 created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+#             );
 def initialize_db() -> None:
     with database() as connection:
         connection.executescript(
@@ -38,7 +53,7 @@ def initialize_db() -> None:
                 username TEXT NOT NULL COLLATE NOCASE UNIQUE,
                 password_hash TEXT NOT NULL,
                 role TEXT NOT NULL CHECK (role IN ('buyer', 'seller')),
-                balance INTEGER NOT NULL DEFAULT 0 CHECK (balance >= 0),
+                balance INTEGER NOT NULL DEFAULT 0,
                 created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
             );
 
@@ -64,7 +79,7 @@ def initialize_db() -> None:
             CREATE TABLE IF NOT EXISTS orders (
                 id INTEGER PRIMARY KEY,
                 buyer_id INTEGER NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
-                total_cost INTEGER NOT NULL CHECK (total_cost > 0),
+                total_cost INTEGER NOT NULL,
                 status TEXT NOT NULL DEFAULT 'completed',
                 created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
             );

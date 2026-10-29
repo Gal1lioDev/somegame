@@ -8,17 +8,49 @@
     <p class="price">{{ product.price }} credits</p>
     <p>Available stock: {{ product.stock }}</p>
     {% if user and user.role == "buyer" %}
+      <p>Your balance: {{ user.balance }} credits</p>
       <div class="actions">
-        <form method="post" action="/products/{{ product.id }}/purchase" class="purchase-form">
+        <form
+          method="post"
+          action="/products/{{ product.id }}/purchase"
+          class="purchase-form"
+          data-price="{{ product.price }}"
+          data-balance="{{ user.balance }}"
+        >
           <input type="hidden" name="csrf" value="{{ csrf_token }}">
           <label>Quantity <input type="number" name="quantity" min="1" max="10000" value="1" required></label>
           <button type="submit" {% if product.stock < 1 %}disabled{% endif %}>Purchase</button>
         </form>
+        <p class="validation-error" role="alert" hidden></p>
         <form method="post" action="/products/{{ product.id }}/wishlist">
           <input type="hidden" name="csrf" value="{{ csrf_token }}">
           <button class="secondary" type="submit">Add to wishlist</button>
         </form>
       </div>
+      <script>
+        const purchaseForm = document.querySelector(".purchase-form");
+        const quantityInput = purchaseForm.querySelector('[name="quantity"]');
+        const checkoutError = document.querySelector(".validation-error");
+        const updateCheckoutError = () => {
+          if (!quantityInput.validity.valid) {
+            checkoutError.hidden = true;
+            return;
+          }
+          const total = BigInt(quantityInput.valueAsNumber) * BigInt(purchaseForm.dataset.price);
+          const balance = BigInt(purchaseForm.dataset.balance);
+          checkoutError.hidden = total <= balance;
+          if (!checkoutError.hidden) {
+            checkoutError.textContent = `This purchase costs ${total} credits, but your balance is ${balance} credits.`;
+          }
+        };
+        quantityInput.addEventListener("input", updateCheckoutError);
+        purchaseForm.addEventListener("submit", (event) => {
+          updateCheckoutError();
+          if (!checkoutError.hidden) {
+            event.preventDefault();
+          }
+        });
+      </script>
     {% elif not user %}
       <p><a href="/login">Log in as a buyer</a> to purchase or save this product.</p>
     {% endif %}

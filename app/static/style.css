@@ -40,6 +40,7 @@ h2 { font-size: 1.15rem; }
 label { display: grid; gap: .4rem; font-weight: 600; }
 input, textarea, select { width: 100%; padding: .65rem; border: 1px solid #bdc7d4; border-radius: 5px; font: inherit; background: white; }
 .notice { padding: .8rem 1rem; border: 1px solid #a9d8bd; border-radius: 6px; background: #eaf7ef; }
+.validation-error { color: #a52e32; font-weight: 600; }
 .page-heading, .list-row, .actions { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
 .page-heading { margin-bottom: 1rem; }
 .page-heading h1, .page-heading h2 { margin: 0; }

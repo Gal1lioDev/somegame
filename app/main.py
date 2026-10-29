@@ -330,8 +330,8 @@ def purchase_product(
             if product["stock"] < amount:
                 raise PageError(400, "There is not enough stock for that quantity.")
             total = product["price"] * amount
-            if account["balance"] < total:
-                raise PageError(400, "You do not have enough credits for this purchase.")
+            # if account["balance"] < total:
+            #     raise PageError(400, "You do not have enough credits for this purchase.")
 
             connection.execute(
                 "UPDATE users SET balance = balance - ? WHERE id = ?",
