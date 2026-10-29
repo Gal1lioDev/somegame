@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Purchase history · Simple Market{% endblock %}
+{% block content %}
+  <h1>Purchase history</h1>
+  {% if orders %}
+    <div class="list">
+      {% for order in orders %}
+        <section class="panel order">
+          <div class="page-heading">
+            <h2>Order #{{ order.id }}</h2>
+            <span class="muted">{{ order.created_at }}</span>
+          </div>
+          <ul class="order-items">
+            {% for item in items_by_order.get(order.id, []) %}
+              <li>{{ item.product_name }} — {{ item.quantity }} × {{ item.unit_price }} credits</li>
+            {% endfor %}
+          </ul>
+          <p><strong>Total: {{ order.total_cost }} credits</strong></p>
+        </section>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="empty-state">You have not placed any orders yet.</p>
+  {% endif %}
+{% endblock %}

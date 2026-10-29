@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Seller dashboard · Simple Market{% endblock %}
+{% block content %}
+  <div class="page-heading">
+    <div><h1>Your listings</h1><p class="muted">Manage products you have listed.</p></div>
+    <a class="button" href="/seller/products/new">Create listing</a>
+  </div>
+  {% if products %}
+    <div class="list">
+      {% for product in products %}
+        <article class="list-row">
+          <div>
+            <h2>{{ product.name }}{% if not product.is_available %} <span class="muted">(archived)</span>{% endif %}</h2>
+            <p class="muted">{{ product.price }} credits · Stock: {{ product.stock }}</p>
+          </div>
+          {% if product.is_available %}
+            <div class="actions">
+              <a class="button secondary" href="/seller/products/{{ product.id }}/edit">Edit</a>
+              <form method="post" action="/seller/products/{{ product.id }}/delete">
+                <input type="hidden" name="csrf" value="{{ csrf_token }}">
+                <button class="danger" type="submit">Archive</button>
+              </form>
+            </div>
+          {% else %}
+            <form method="post" action="/seller/products/{{ product.id }}/restore">
+              <input type="hidden" name="csrf" value="{{ csrf_token }}">
+              <button type="submit">Restore listing</button>
+            </form>
+          {% endif %}
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="empty-state">You have not created any listings.</p>
+  {% endif %}
+{% endblock %}

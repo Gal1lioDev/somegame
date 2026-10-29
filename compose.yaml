@@ -1,0 +1,15 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      SESSION_SECRET: ${SESSION_SECRET:-}
+      INITIAL_BUYER_BALANCE: ${INITIAL_BUYER_BALANCE:-1000}
+      SESSION_HTTPS_ONLY: ${SESSION_HTTPS_ONLY:-false}
+    volumes:
+      - shop-data:/data
+    restart: unless-stopped
+
+volumes:
+  shop-data:

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }} · Simple Market{% endblock %}
+{% block content %}
+  <article class="panel">
+    <p class="eyebrow">Listed by {{ product.seller_name }}</p>
+    <h1>{{ product.name }}</h1>
+    <p class="description">{{ product.description or "No description provided." }}</p>
+    <p class="price">{{ product.price }} credits</p>
+    <p>Available stock: {{ product.stock }}</p>
+    {% if user and user.role == "buyer" %}
+      <div class="actions">
+        <form method="post" action="/products/{{ product.id }}/purchase" class="purchase-form">
+          <input type="hidden" name="csrf" value="{{ csrf_token }}">
+          <label>Quantity <input type="number" name="quantity" min="1" max="10000" value="1" required></label>
+          <button type="submit" {% if product.stock < 1 %}disabled{% endif %}>Purchase</button>
+        </form>
+        <form method="post" action="/products/{{ product.id }}/wishlist">
+          <input type="hidden" name="csrf" value="{{ csrf_token }}">
+          <button class="secondary" type="submit">Add to wishlist</button>
+        </form>
+      </div>
+    {% elif not user %}
+      <p><a href="/login">Log in as a buyer</a> to purchase or save this product.</p>
+    {% endif %}
+  </article>
+{% endblock %}

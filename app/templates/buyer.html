@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Buyer dashboard · Simple Market{% endblock %}
+{% block content %}
+  <section class="panel">
+    <h1>Welcome, {{ buyer.username }}</h1>
+    <p class="balance">{{ buyer.balance }} <span>credits available</span></p>
+    <div class="actions">
+      <a class="button" href="/marketplace">Browse marketplace</a>
+      <a class="button secondary" href="/wishlist">View wishlist</a>
+      <a class="button secondary" href="/orders">Purchase history</a>
+    </div>
+  </section>
+{% endblock %}

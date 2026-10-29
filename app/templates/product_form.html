@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}{% if product %}Edit listing{% else %}Create listing{% endif %} · Simple Market{% endblock %}
+{% block content %}
+  <section class="panel narrow">
+    <h1>{% if product %}Edit listing{% else %}Create a listing{% endif %}</h1>
+    <form method="post" action="{{ form_action }}" class="stack">
+      <input type="hidden" name="csrf" value="{{ csrf_token }}">
+      <label>Product name
+        <input name="name" maxlength="120" value="{{ product.name if product else '' }}" required>
+      </label>
+      <label>Description
+        <textarea name="description" maxlength="2000" rows="5">{{ product.description if product else '' }}</textarea>
+      </label>
+      <label>Price (credits)
+        <input type="number" name="price" min="1" step="1" value="{{ product.price if product else '' }}" required>
+      </label>
+      <label>Stock quantity
+        <input type="number" name="stock" min="0" step="1" value="{{ product.stock if product else '' }}" required>
+      </label>
+      <button type="submit">{% if product %}Save changes{% else %}Create listing{% endif %}</button>
+    </form>
+  </section>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Marketplace · Simple Market{% endblock %}
+{% block content %}
+  <div class="page-heading">
+    <div><h1>Marketplace</h1><p class="muted">Browse available listings.</p></div>
+  </div>
+  <form class="search-form" method="get" action="/marketplace">
+    <label class="sr-only" for="search">Search products</label>
+    <input id="search" name="q" value="{{ search }}" placeholder="Search products by name">
+    <button type="submit">Search</button>
+  </form>
+  {% if products %}
+    <div class="product-grid">
+      {% for product in products %}
+        <article class="card">
+          <h2><a href="/products/{{ product.id }}">{{ product.name }}</a></h2>
+          <p>{{ product.description or "No description provided." }}</p>
+          <p class="price">{{ product.price }} credits</p>
+          <p class="muted">Stock: {{ product.stock }} · Seller: {{ product.seller_name }}</p>
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="empty-state">No available products found.</p>
+  {% endif %}
+{% endblock %}

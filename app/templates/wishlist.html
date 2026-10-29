@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Wishlist · Simple Market{% endblock %}
+{% block content %}
+  <h1>Your wishlist</h1>
+  {% if products %}
+    <div class="list">
+      {% for product in products %}
+        <article class="list-row">
+          <div>
+            {% if product.is_available %}
+              <h2><a href="/products/{{ product.id }}">{{ product.name }}</a></h2>
+              <p class="muted">{{ product.price }} credits · Stock: {{ product.stock }}</p>
+            {% else %}
+              <h2>{{ product.name }} <span class="muted">(unavailable)</span></h2>
+            {% endif %}
+          </div>
+          <form method="post" action="/wishlist/{{ product.id }}/remove">
+            <input type="hidden" name="csrf" value="{{ csrf_token }}">
+            <button class="danger" type="submit">Remove</button>
+          </form>
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="empty-state">Your wishlist is empty.</p>
+  {% endif %}
+{% endblock %}

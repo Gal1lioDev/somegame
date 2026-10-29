@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Register · Simple Market{% endblock %}
+{% block content %}
+  <section class="panel narrow">
+    <h1>Create an account</h1>
+    <form method="post" action="/register" class="stack">
+      <input type="hidden" name="csrf" value="{{ csrf_token }}">
+      <label>Username <input name="username" minlength="3" maxlength="32" autocomplete="username" required></label>
+      <label>Password <input type="password" name="password" minlength="10" maxlength="256" autocomplete="new-password" required></label>
+      <label>Account type
+        <select name="role" required><option value="buyer">Buyer</option><option value="seller">Seller</option></select>
+      </label>
+      <button type="submit">Register</button>
+    </form>
+    <p class="muted">Buyer accounts start with {{ initial_balance }} virtual credits.</p>
+  </section>
+{% endblock %}
