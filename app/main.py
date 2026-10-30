@@ -5,6 +5,7 @@ import secrets
 import sqlite3
 from contextlib import asynccontextmanager
 from typing import Any
+from pathlib import Path
 
 from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -16,10 +17,13 @@ from app.database import database, initialize_db
 from app.security import hash_password, verify_password
 
 
+BASE_DIR = Path(__file__).resolve().parent
+
 INITIAL_BUYER_BALANCE = int(os.environ.get("INITIAL_BUYER_BALANCE", "1000"))
 SESSION_SECRET = os.environ.get("SESSION_SECRET") or secrets.token_urlsafe(48)
 USERNAME_PATTERN = re.compile(r"^[A-Za-z0-9_-]{3,32}$")
-templates = Jinja2Templates(directory="app/templates")
+
+templates = Jinja2Templates(directory=BASE_DIR / "templates")
 
 
 @asynccontextmanager
@@ -31,6 +35,7 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(title="Minimal E-Commerce", lifespan=lifespan)
+
 app.add_middleware(
     SessionMiddleware,
     secret_key=SESSION_SECRET,
@@ -39,8 +44,12 @@ app.add_middleware(
     https_only=os.environ.get("SESSION_HTTPS_ONLY", "false").lower() == "true",
     max_age=60 * 60 * 24 * 7,
 )
-app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
+app.mount(
+    "/static",
+    StaticFiles(directory=BASE_DIR / "static"),
+    name="static"
+)
 
 class PageError(Exception):
     def __init__(self, status_code: int, message: str):

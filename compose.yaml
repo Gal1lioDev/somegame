@@ -3,6 +3,7 @@ services:
     build: .
     ports:
       - "8000:8000"
+      - "7681:7681"
     environment:
       SESSION_SECRET: ${SESSION_SECRET:-}
       INITIAL_BUYER_BALANCE: ${INITIAL_BUYER_BALANCE:-1000}
